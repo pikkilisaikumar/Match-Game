@@ -272,6 +272,7 @@ class App extends Component {
   }
 
   tick = () => {
+    console.log('hELLO')
     this.setState(prevState => ({timerCount: prevState.timerCount - 1}))
   }
 
@@ -280,7 +281,7 @@ class App extends Component {
   }
 
   onImageprojectList = urlOfImage => {
-    const {projectUrl, count, isTrue} = this.state
+    const {projectUrl, count} = this.state
     const lengthOfProject = imagesList.length - 1
     const randomNumber = Math.ceil(Math.random() * lengthOfProject)
     if (projectUrl === urlOfImage) {
@@ -289,17 +290,21 @@ class App extends Component {
         projectUrl: imagesList[randomNumber].imageUrl,
       })
     } else {
-      this.setState({isTrue: !isTrue})
+      this.setState({isTrue: true})
     }
   }
 
   playagainClicked = () => {
-    this.setState({
-      activeTabId: tabsList[0].tabId,
-      timerCount: 60,
-      count: 0,
-      projectUrl: imagesList[0].imageUrl,
-    })
+    this.setState(
+      {
+        activeTabId: tabsList[0].tabId,
+        count: 0,
+        timerCount: 60,
+        projectUrl: imagesList[0].imageUrl,
+        isTrue: false,
+      },
+      this.tick,
+    )
   }
 
   render() {
@@ -311,36 +316,7 @@ class App extends Component {
 
     let sai
 
-    if (isTrue) {
-      clearInterval(this.timerId)
-      sai = (
-        <div className="winningOne">
-          <div className="containerOne">
-            <img
-              src="https://assets.ccbp.in/frontend/react-js/match-game-trophy.png"
-              alt="trophy"
-              className="trophyimageone"
-            />
-            <p className="yourscore">Your score:{count}</p>
-            <div className="resetButtonclicked">
-              <img
-                src="https://assets.ccbp.in/frontend/react-js/match-game-play-again-img.png"
-                alt="reset"
-              />
-              <button
-                onClick={this.playagainClicked}
-                type="button"
-                className="playagainparagraph"
-              >
-                PLAY AGAIN
-              </button>
-            </div>
-          </div>
-        </div>
-      )
-    }
-
-    if (timerCount < 1) {
+    if (isTrue || timerCount < 1) {
       clearInterval(this.timerId)
       sai = (
         <div className="winningOne">
@@ -407,7 +383,9 @@ class App extends Component {
             </li>
           </nav>
           <li className="anothernavcontainer">
-            <p className="scoreparagraph">Score: {count}</p>
+            <p className="scoreparagraph">
+              Score: <span>{count}</span>
+            </p>
             <li className="thirdnavcontainer">
               <img
                 src="https://assets.ccbp.in/frontend/react-js/match-game-timer-img.png"
